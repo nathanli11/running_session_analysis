@@ -1,8 +1,7 @@
 streamlit
+streamlit-folium
+plotly
 pandas
 numpy
-matplotlib
-plotly
-folium
-streamlit-folium
 fitparse
+folium
