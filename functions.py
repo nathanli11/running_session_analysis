@@ -3,13 +3,11 @@ import numpy as np
 from fitparse import FitFile
 import folium
 
-
-
 def import_data_fit(filename:str) -> pd.DataFrame:
     '''
     Function to transform a FIT file in to a dataframe
 
-    Input : Filename or filepath
+    Input : Filename or filepath (here data.fit in our case)
     Output : two dataframe, one with datas and the other one with the units
     '''
     fitfile = FitFile(filename)
@@ -117,9 +115,9 @@ def all_session_stat(df : pd.DataFrame):
     running time, maximum, minimum and the average heart rate, maximum, minimum and the average altitude,
     the elevetion gain and loss, the average and maximum speed, the pace and the average temperature.
 
-    Input : Dataframe of datas
+    Input : df :Dataframe of datas
 
-    Output : a dataframe with statistics
+    Output : df_stats : a dataframe with statistics
     '''
     stats = {}
     # Total distance (value of the last row)
@@ -165,22 +163,22 @@ def running_session_stats(df_warmup: pd.DataFrame, df_speed_interval: pd.DataFra
     dico_interval={}
     # Loop on each dataframe
     for name, df in df_zone.items():
-        dico_interval[f'Total_distance_{name}'] = round(float(df['distance'].iloc[-1] - df['distance'].iloc[0])/1000, 2)
+        dico_interval[f'Total_distance_{name}_km'] = round(float(df['distance'].iloc[-1] - df['distance'].iloc[0])/1000, 2)
         dico_interval[f'Running_time_{name}'] = str(df['timestamp'].iloc[-1] - df['timestamp'].iloc[0]).split( )[2]
-        dico_interval[f'Max_hr_{name}'] = int(df['heart_rate'].max())
-        dico_interval[f'Min_hr_{name}'] = int(df['heart_rate'].min())
-        dico_interval[f'Average_hr_{name}'] = int(df['heart_rate'].mean())
-        dico_interval[f'Max_altitude_{name}'] = int(df['altitude'].max())
-        dico_interval[f'Min_altitude_{name}'] = int(df['altitude'].min())
-        dico_interval[f'Average_altitude_{name}'] = int(df['altitude'].mean())
+        dico_interval[f'Max_hr_{name}_bpm'] = int(df['heart_rate'].max())
+        dico_interval[f'Min_hr_{name}_bpm'] = int(df['heart_rate'].min())
+        dico_interval[f'Average_hr_{name}_bpm'] = int(df['heart_rate'].mean())
+        dico_interval[f'Max_altitude_{name}_m'] = int(df['altitude'].max())
+        dico_interval[f'Min_altitude_{name}_m'] = int(df['altitude'].min())
+        dico_interval[f'Average_altitude_{name}_m'] = int(df['altitude'].mean())
         altitude_diff = df['altitude'].diff()
-        dico_interval[f'Elevation_gain_{name}'] = round(float(altitude_diff[altitude_diff > 0].sum()),2)
-        dico_interval[f'Elevation_loss_{name}'] = round(float(altitude_diff[altitude_diff < 0].sum()),2)
+        dico_interval[f'Elevation_gain_{name}_m'] = round(float(altitude_diff[altitude_diff > 0].sum()),2)
+        dico_interval[f'Elevation_loss_{name}_m'] = round(float(altitude_diff[altitude_diff < 0].sum()),2)
         dico_interval[f'Average_enhanced_speed_m/s_{name}'] = round(float(df['enhanced_speed'].mean()),2)
         dico_interval[f'Average_enhanced_speed_km/h_{name}'] = round(float(df['enhanced_speed'].mean()*3.6),2)
         dico_interval[f'Max_enhanced_speed_m/s_{name}'] = round(float(df['enhanced_speed'].max()),2)
         dico_interval[f'Max_enhanced_speed_km/h_{name}'] = round(float(df['enhanced_speed'].max()*3.6),2)
-        dico_interval[f'Average_speed_{name}'] = round(float(df['speed'].mean()),2)
+        dico_interval[f'Average_speed_{name}_m/s'] = round(float(df['speed'].mean()),2)
         dico_interval[f'Pace_min/km_{name}'] = round(1000 / (dico_interval[f'Average_enhanced_speed_m/s_{name}'] * 60),2)
 
     dico_warmup = {}
