@@ -520,8 +520,12 @@ st.markdown("In conlusion, this is a high-intensity running session. Maintaining
 "For example, no more thant two interval sessions should be done in a week. You need to add what are known as fundamental endurance sessions. " \
 "In addition, it can be very beneficial to add muscle strengthening sessions to prevent injuries and strengthen the muscles needed for climbing and descending. " \
 "Working out on the steps of the stadium stands can also be an alternative way to build strength. \n" \
+
+"The ground and terrain can also be factors to consider when it comes to the difficulty of the race. Training on a track does " \
+"not alllow you to develop your skills on uneven terrain. In other words, you will not be used to running on ground with holes, roots, stones or imperfections. " \
+"This can be a problem. I recommend inclunding trainin in the forest, on trails or in the mountains il you can. \n"
 "Track work will pose a problem on climbs and descents. This is because of the terrain is not flat. This can be problematic if the terrain is technical. " \
-"In terms of muscles strength, following this advice may be a way to feel comfortable on short trails.")
+"In terms of muscles strength, following this advice may be a way to feel comfortable on short trails. ")
 
 st.markdown("Finally, pay attention to the temperature. Your session took place in Nîmes at an average temprature of 26 degrees. This has an impact on performance and on the heart rate. In England, the temperature is likely to be lower," \
 "which will affect how you feel while running.")
