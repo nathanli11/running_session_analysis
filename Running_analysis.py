@@ -530,6 +530,6 @@ st.markdown("In conlusion, this is a high-intensity running session. Maintaining
 "Track work will pose a problem on climbs and descents. This is because of the terrain is not flat. This can be problematic if the terrain is technical. " \
 "In terms of muscles strength, following this advice may be a way to feel comfortable on short trails. ")
 
-st.markdown("Finally, pay attention to the temperature. Your session took place in Nîmes at an average temprature of 26 degrees. This has an impact on performance and on the heart rate. In England, the temperature is likely to be lower," \
+st.markdown("Finally, pay attention to the temperature. Your session took place in Nîmes at an average temperature of 26 degrees. This has an impact on performance and on the heart rate. In England, the temperature is likely to be lower," \
 "which will affect how you feel while running.")
 st.markdown("I wish you a great trail run and hope you perform as well as you hope to.")
