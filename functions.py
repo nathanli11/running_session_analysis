@@ -1,13 +1,6 @@
 import pandas as pd
 import numpy as np
 from fitparse import FitFile
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
-import plotly.express as px
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
-import streamlit as st
-from streamlit_folium import st_folium
 import folium
 
 
