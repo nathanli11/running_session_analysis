@@ -41,7 +41,7 @@ m = fc.mapping_session(df_data, "position_lat", "position_long")
 ### Running session stats
 df_stats = fc.all_session_stat(df_data)
 
-#-------------- Streamlit ------------
+
 # Title of streamlit app
 st.title("Analysis of the track runnning session")
 # Cut the page into two columns
@@ -140,12 +140,10 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.subheader("Warm-up statistics")
     st.dataframe(df_warmup_stat, hide_index=True)
-
 # Display dataframe speed interval on second column
 with col2:
     st.subheader("Speed interval statistics")
     st.dataframe(df_speed_stat, hide_index=True)
-
 # Display dataframe cool-down on third column
 with col3:
     st.subheader("Cool-down statistics")
@@ -155,7 +153,8 @@ with col3:
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 
 #---- WARM UP -----
-# 1 : Speed
+# Create a scatter plot with the speed and the heart rate
+# 1 : Speed 
 fig.add_trace(go.Scatter(
     x=df_warmup['time'],
     y=df_warmup['enhanced_speed'],
@@ -200,7 +199,7 @@ st.markdown("The speed interval session consists of 30 seconds of effort followe
 "break and then again 8 speed intervals.")
 
 # Speed interval datas and stats
-threshold = 4.0
+threshold = 4.0 # 4 is chosen by me. It is the point where rest speed < 4 and effort speed > 4
 df_intervals_speed, df_intervals_rest = fc.speed_session_stat(df_speed_interval, threshold)
 
 # streamlit for display dataframes
@@ -213,8 +212,7 @@ with col4:
     "is also higher than in the first part, but this is due to the speed. In fact, when we look at the two " \
     "parts, we see that at the same speed, the heart is very similar." \
     "\n" \
-    "This does not indicate particlar fatigue, but rather intense effort over 30 seconds.")
-    
+    "This does not indicate particular fatigue, but rather intense effort over 30 seconds.")
 with col5:
     st.dataframe(df_intervals_rest, hide_index=True, width=500, height=300)
     st.markdown("The rest phases provide important informations. The rest time between two efforts is approximately " \
@@ -226,6 +224,7 @@ with col5:
 
 # Pace visualization
 x_labels, time_per_zone_min = fc.pace(df_speed_interval)
+# Bar plot for pace visualization
 fig3 = px.bar(
     x = x_labels,
     y=time_per_zone_min.values,
@@ -238,14 +237,15 @@ fig3.update_layout(
     height=500,
     title=dict(x=0.5)
     )
+# Plot
 st.plotly_chart(fig3, use_container_width=True)
 st.markdown("We note that most of the time, speed intervals are between 2:40 and 3 min/km." \
             "These are speeds that cause fatigue. Indeed, the heart rate is very high during these intervals. " \
             "However, we can see that you are capable of running at a pace of 2:40 min/km almost during 3min and at 2:50 min/km during 4min15s, which is very good. " )
 
-# First graph : speed and cadence
+# Graph : speed and cadence
 fig1 = make_subplots(specs=[[{"secondary_y": True}]])
-# 1 - speed
+# 1 - speed : scatter plot
 fig1.add_trace(go.Scatter(
     x=df_speed_interval['time'],
     y=df_speed_interval['enhanced_speed'],
@@ -254,7 +254,7 @@ fig1.add_trace(go.Scatter(
     line=dict(color='black', width=2), 
     visible = True
 ), secondary_y=False)
-# 2 - cadence
+# 2 - cadence : bar plot
 fig1.add_trace(go.Bar(
     x=df_speed_interval['time'],
     y=df_speed_interval['cadence'],
@@ -271,9 +271,9 @@ fig1.update_layout(
     height=500
 )
 fig1.update_yaxes(title_text="Cadence (ppm)", secondary_y=True)
-# Second graph : speed and step length
+# Graph : speed and step length
 fig2 = make_subplots(specs=[[{"secondary_y": True}]])
-# 1 - speed
+# 1 - speed : scatter plot
 fig2.add_trace(go.Scatter(
     x=df_speed_interval['time'],
     y=df_speed_interval['enhanced_speed'],
@@ -282,7 +282,7 @@ fig2.add_trace(go.Scatter(
     line=dict(color='black', width=2),
     visible=True
 ), secondary_y=False)
-# 2 - Step length
+# 2 - Step length : bar plot
 fig2.add_trace(go.Bar(
     x=df_speed_interval['time'],
     y=df_speed_interval['step_length']/10,
@@ -318,6 +318,7 @@ with col7:
     "particularly in the last 5 strides. \n \n")
 # Graph : stance time and speed
 fig1 = go.Figure()
+# Scatter plot
 fig1.add_trace(go.Scatter(
     x = df_speed_interval['time'],
     y=df_speed_interval['stance_time']/100,
@@ -325,6 +326,7 @@ fig1.add_trace(go.Scatter(
     name='Stance Time (ms * 10e-2)',
     line=dict(color='blue', width=2)
 ))
+# Scatter plot
 fig1.add_trace(go.Scatter(
     x=df_speed_interval['time'],
     y=df_speed_interval['enhanced_speed'],
@@ -393,12 +395,15 @@ with col9:
 
 # Heart rate analysis
 st.subheader("Heart Rate zones and analysis")
+# Groupby heart rate zone to have the length of time in each zone
 time_per_zone_hr = df_speed_interval.groupby('heart_rate_zone')['delta_time'].sum().sort_index()
+# second to minute
 time_per_zone_hr_min = time_per_zone_hr / 60  
 
 df_zone_plot = time_per_zone_hr_min.reset_index()
 df_zone_plot.columns = ['Heart Rate Zone', 'Time (min)']
 # Plot Heart Rate Zones
+# Bar plot with horizontal orientation
 fig4 = px.bar(
     df_zone_plot,
     x='Time (min)',
@@ -409,6 +414,7 @@ fig4 = px.bar(
     text='Time (min)',
     title="Time spent in each heart rate zone"
 )
+# Text on the bar plot
 fig4.update_traces(
     texttemplate='%{text:.1f} min',
     textposition='inside',
@@ -435,7 +441,9 @@ st.markdown("During the speed intervals, you spent more time in high heart rate 
 "However, it is also important to monitor your recovery during the rest periods. You spend 14,7 min in zone 1 and 1,5 min in zone 2. " \
 "This allow your heart to go down rapidly and to rest between your working intervals. ")
 
+# Cardiac drift
 st.subheader("Cardiac drift scatter plot")
+# scatter plot
 fig = px.scatter(
     df_speed_interval,
     x='enhanced_speed',
@@ -448,7 +456,7 @@ fig = px.scatter(
         'time': 'Time (min)'
     },
     title="Speed vs Heart Rate with temporal progression",
-    hover_data=['time']
+    hover_data=['time'] # time value spot with the cursor
 )
 fig.update_layout(
     width=900,
@@ -467,7 +475,7 @@ st.markdown("Cardic drift refers to the gradual increase in heart rate during ex
 # Plot Graph : speed and heart rate
 st.subheader("Cool-down analysis")
 fig = make_subplots(specs=[[{"secondary_y": True}]])
-# 1 - speed
+# 1 - speed : scatter plot
 fig.add_trace(go.Scatter(
     x=df_cooldown['time'],
     y=df_cooldown['enhanced_speed'],
@@ -475,7 +483,7 @@ fig.add_trace(go.Scatter(
     name='Speed (m/s)',
     line=dict(color='black', width=2)
 ), secondary_y=False)
-# 2 - HR
+# 2 - HR : scatter plot
 fig.add_trace(go.Scatter(
     x=df_cooldown['time'],
     y=df_cooldown['heart_rate'],
@@ -486,9 +494,9 @@ fig.add_trace(go.Scatter(
 # Add the average heart rate of the warm-up phase
 fig.add_trace(go.Scatter(
     x=df_cooldown['time'],  
-    y=[df_warmup['heart_rate'].mean()] * len(df_cooldown),  
+    y=[df_warmup['heart_rate'].mean()] * len(df_cooldown),  # all point of y with the same value
     mode='lines',
-    name='Mean Heart Rate (warmup)',
+    name='Mean Heart Rate (warmup) bpm',
     line=dict(color='red', width=2, dash='dash')
 ), secondary_y=True)
 fig.update_layout(
