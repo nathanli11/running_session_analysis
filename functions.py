@@ -205,7 +205,9 @@ def speed_session_stat(df_speed_interval: pd.DataFrame, threshold : float):
     Function that creates a dataframe with statistics of the speed interval session part
 
     Input : Dataframe of datas and a threshold to define the speed intervals
-    Output : a dataframe
+    Outputs : 
+    - df_intervals_speed : statistics of the speed intervals
+    - df_intervals_rest : statistics of the rest intervals
     '''
     # Keep only relevant datas ie enhanced_speed > threshold
     df_speed_interval['is_effort'] = df_speed_interval['enhanced_speed']> threshold
@@ -245,14 +247,20 @@ def speed_session_stat(df_speed_interval: pd.DataFrame, threshold : float):
 
     # rest block analysis
     rests=[]
+    # Loop on the length of the dataframe
     for i in range(len(df_intervals_speed)-1):
+        # Rest start and end + duration
         rest_start = df_intervals_speed['End_time (min)'].iloc[i]
         rest_end = df_intervals_speed['Start_time (min)'].iloc[i+1]
         rest_duration = rest_end - rest_start
         
+        # Average speed of rest 
         avg_speed = df_speed_interval[(df_speed_interval['time'] >= rest_start) & (df_speed_interval['time'] <= rest_end)]['enhanced_speed'].mean()
+        # Average heart rate of rest
         avg_hr = df_speed_interval[(df_speed_interval['time'] >= rest_start) & (df_speed_interval['time'] <= rest_end)]['heart_rate'].mean()
+        # Average pace of rest
         avg_pace = (1000 / df_speed_interval[(df_speed_interval['time'] >= rest_start) & (df_speed_interval['time'] <= rest_end)]['enhanced_speed'] * 60).mean()
+        # Append to the list
         rests.append({
             'Rest_start (min)': rest_start,
             'Rest_end (min)': rest_end,
